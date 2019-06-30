@@ -18,11 +18,10 @@ public:
     Process(string pid){
         this->pid = pid;
         this->user = ProcessParser::getProcUser(pid);
-        //TODOs:
-        //complete for mem
-        //complete for cmd
-        //complete for upTime
-        //complete for cpu
+	this->cpu = ProcessParser::getVmSize(pid);
+        this->cmd = ProcessParser::getCmd(pid);
+        this->upTime = ProcessParser::getProcUpTime(pid);
+        this->cpu = ProcessParser::getCpuPercent(pid);
     }
     void setPid(int pid);
     string getPid()const;
