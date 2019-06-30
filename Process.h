@@ -15,13 +15,15 @@ private:
     string upTime;
 
 public:
+
+    Process() {}
     Process(string pid){
         this->pid = pid;
         this->user = ProcessParser::getProcUser(pid);
-	this->cpu = ProcessParser::getVmSize(pid);
         this->cmd = ProcessParser::getCmd(pid);
+	    this->cpu = ProcessParser::getVmSize(pid);
+        this->mem = ProcessParser::getCpuPercent(pid);
         this->upTime = ProcessParser::getProcUpTime(pid);
-        this->cpu = ProcessParser::getCpuPercent(pid);
     }
     void setPid(int pid);
     string getPid()const;
@@ -32,12 +34,31 @@ public:
     string getUpTime()const;
     string getProcess();
 };
+
 void Process::setPid(int pid){
     this->pid = pid;
 }
 string Process::getPid()const {
     return this->pid;
 }
+string Process::getUser() const {
+    return this->user;
+}
+string Process::getCmd() const {
+    return this->cmd;
+}
+int Process::getCpu() const {
+    // TODO: convert string to int - this->cpu;
+    return 0;
+}
+int Process::getMem() const {
+    // TODO: convert string to int - this->mem;
+    return 0;
+}
+string Process::getUpTime() const {
+    return this->upTime;
+}
+
 string Process::getProcess(){
     if(!ProcessParser::isPidExisting(this->pid))
         return "";
