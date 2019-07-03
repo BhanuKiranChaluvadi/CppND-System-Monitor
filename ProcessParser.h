@@ -24,7 +24,7 @@ using namespace std;
 class ProcessParser{
 private:
     std::ifstream stream;
-    public:
+public:
     static string getCmd(string pid);
     static vector<string> getPidList();
     static std::string getVmSize(string pid);
@@ -45,3 +45,69 @@ private:
 };
 
 // TODO: Define all of the above functions below:
+string ProcessParser::getCmd(string pid) {
+
+}
+
+vector<string> ProcessParser::getPidList() {
+
+}
+
+string  ProcessParser::getVmSize(string pid){
+
+}
+
+string ProcessParser::getCpuPercent(string pid) {
+
+}
+
+long int ProcessParser::getSysUpTime() {
+
+}
+
+string ProcessParser::getProcUpTime(string pid) {
+
+}
+
+string ProcessParser::getProcUser(string pid) {
+
+}
+
+
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber = "") {
+
+}
+
+float ProcessParser::getSysRamPercent() {
+
+}
+
+string ProcessParser::getSysKernelVersion() {
+
+}
+
+int ProcessParser::getNumberOfCores() {
+
+}
+
+int ProcessParser::getTotalThreads() {
+    
+}
+int ProcessParser::getTotalNumberOfProcesses() {
+    
+}
+int ProcessParser::getNumberOfRunningProcesses() {
+
+}
+
+string ProcessParser::getOSName(){
+
+}
+
+string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2){
+
+}
+
+bool ProcessParser::isPidExisting(string pid){
+
+}

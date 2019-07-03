@@ -12,12 +12,12 @@ static void getStream(std::string path, std::ifstream& stream);
 };
 
 std::string Util::convertToTime (long int input_seconds){
-long minutes = input_seconds / 60;
-long hours = minutes / 60;
-long seconds = int(input_seconds%60);
-minutes = int(minutes%60);
-std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
-return result;
+    long minutes = input_seconds / 60;
+    long hours = minutes / 60;
+    long seconds = int(input_seconds%60);
+    minutes = int(minutes%60);
+    std::string result = std::to_string(hours) + ":" + std::to_string(minutes) + ":" + std::to_string(seconds);
+    return result;
 }
 // constructing string for given percentage
 // 50 bars is uniformly streched 0 - 100 %
@@ -53,5 +53,4 @@ void Util::getStream(std::string path, std::ifstream& stream){
         stream.close();
         throw std::runtime_error("Non - existing PID");
     }
-    //return stream;
 }
