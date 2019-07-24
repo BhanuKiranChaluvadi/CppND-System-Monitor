@@ -13,7 +13,7 @@
 #include <stdexcept>
 #include <cerrno>
 #include <cstring>
-#include <dirent.h>
+#include <dirent.h>     // basics- directory access - opendir(), readdir(), closedir()
 #include <time.h>
 #include <unistd.h>
 #include "constants.h"
@@ -46,11 +46,35 @@ public:
 
 // TODO: Define all of the above functions below:
 string ProcessParser::getCmd(string pid) {
-
+    
 }
 
 vector<string> ProcessParser::getPidList() {
+    // TODO: fiter non pid file in the proc folder.
+    vector <string> pidList;
+    DIR *pdir = nullptr;
+    pdir = opendir(Path::basePath().c_str());
 
+    struct dirent *pent = nullptr;
+
+    if(pdir == nullptr) {
+        cout << "\nERROR! directory pointer could not be initialised correctly";
+        exit (3);
+    }
+    while (pent = readdir(pdir)) {
+        if(pent == nullptr) {
+            cout << "\nERROR! pent could not be initialised correctly";
+            exit (3);
+        }
+        
+        pidList.push_back(pent->d_name );
+         
+    }
+
+    // finally, let's close the directory
+    closedir (pdir);
+
+    return pidList;
 }
 
 string  ProcessParser::getVmSize(string pid){
