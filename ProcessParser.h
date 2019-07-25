@@ -11,12 +11,13 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
-#include <cerrno>
+#include <cerrno>       // Error handeling library
 #include <cstring>
 #include <dirent.h>     // basics- directory access - opendir(), readdir(), closedir()
 #include <time.h>
-#include <unistd.h>
+#include <unistd.h>     // unix standard header - threads
 #include "constants.h"
+#include "util.h"
 
 
 using namespace std;
@@ -46,7 +47,13 @@ public:
 
 // TODO: Define all of the above functions below:
 string ProcessParser::getCmd(string pid) {
+    // TODO: open file and read all the lines.
+    string path = Path::basePath() + pid + Path::cmdPath();
+    std::ifstream stream;
+    Util::getStream(path, stream);
     
+    stream.close();
+
 }
 
 vector<string> ProcessParser::getPidList() {
