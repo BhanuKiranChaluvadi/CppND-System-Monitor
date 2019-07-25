@@ -51,7 +51,7 @@ string ProcessParser::getCmd(string pid) {
     string path = Path::basePath() + pid + Path::cmdPath();
     std::ifstream stream;
     Util::getStream(path, stream);
-    
+
     stream.close();
 
 }
@@ -85,7 +85,27 @@ vector<string> ProcessParser::getPidList() {
 }
 
 string  ProcessParser::getVmSize(string pid){
-
+    std::string name = "VmData";
+    std::string vmSize;
+    // get the stream
+    string path = Path::basePath() + pid + Path::statusPath();
+    std::ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    // read each line 
+    while(getline(stream, line))  {
+        // compare if name exsists in first fee spots.
+        if (line.compare(0, name.size(), name) == 0) {
+            // split the line sting into individua strings
+            std::istringstream iss(line);
+            std::vector<std::string> words(std::istream_iterator<string>{iss}, 
+                                            std::istream_iterator<string>());
+            // convertion kB --> GB
+            vmSize = std::to_string(stof(words[1])/float(1024)) ; 
+            break;
+        }
+    }
+    return vmSize;
 }
 
 string ProcessParser::getCpuPercent(string pid) {
