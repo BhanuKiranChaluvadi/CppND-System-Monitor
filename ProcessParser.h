@@ -100,6 +100,9 @@ string  ProcessParser::getVmSize(string pid){
             std::istringstream iss(line);
             std::vector<std::string> words(std::istream_iterator<string>{iss}, 
                                             std::istream_iterator<string>());
+            // DEBUG
+            // std::for_each(std::begin(words), std::end(words), [](std::string &word){ std::cout << word<< std::endl;}) ;
+            
             // convertion kB --> GB
             vmSize = std::to_string(stof(words[1])/float(1024)) ; 
             break;
