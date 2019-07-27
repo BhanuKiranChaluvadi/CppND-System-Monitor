@@ -61,26 +61,23 @@ vector<string> ProcessParser::getPidList() {
     vector <string> pidList;
     DIR *pdir = nullptr;
     pdir = opendir(Path::basePath().c_str());
-
-    struct dirent *pent = nullptr;
-
     if(pdir == nullptr) {
-        cout << "\nERROR! directory pointer could not be initialised correctly";
-        exit (3);
+        throw std::runtime_error(std::strerror(errno));
     }
-    while (pent = readdir(pdir)) {
-        if(pent == nullptr) {
-            cout << "\nERROR! pent could not be initialised correctly";
-            exit (3);
-        }
-        
-        pidList.push_back(pent->d_name );
-         
+
+    struct dirent *dirp = nullptr;
+    while (dirp = readdir(pdir)) {
+        // is this a directory
+        if(dirp->d_type != DT_DIR)
+            continue;
+        // is every character of a name is digit ?
+        if(all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](const char& c){return isdigit(c);}))
+            pidList.push_back(dirp->d_name );  
     }
 
     // finally, let's close the directory
-    closedir (pdir);
-
+    if(closedir(pdir))
+        throw std::runtime_error(std::strerror(errno));
     return pidList;
 }
 
