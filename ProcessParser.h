@@ -398,8 +398,8 @@ string ProcessParser::getOSName(){
 }
 
 string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2){
-    float activeTime =  ProcessParser::getSysActiveCpuTime(values2) -  ProcessParser::getSysActiveCpuTime(values1);
-    float idleTime =  ProcessParser::getSysIdleCpuTime(values2) -  ProcessParser::getSysIdleCpuTime(values1);
+    float activeTime =  ProcessParser::getSysActiveCpuTime(values2) - ProcessParser::getSysActiveCpuTime(values1);
+    float idleTime =  ProcessParser::getSysIdleCpuTime(values2) - ProcessParser::getSysIdleCpuTime(values1);
     float totalTime = activeTime + idleTime;
     float result = 100.0*(activeTime / totalTime);
     return to_string(result);
