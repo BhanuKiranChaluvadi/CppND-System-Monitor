@@ -145,7 +145,17 @@ string ProcessParser::getCpuPercent(string pid) {
 }
 
 long int ProcessParser::getSysUpTime() {
-
+    // path
+    string path = Path::basePath() + "/" + Path::upTimePath();
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    getline(stream, line);
+    // split the line based on spaces
+    istringstream buf(line);
+    istream_iterator<string> beg(buf), end;
+    vector<string> values(beg, end);
+    return stoi(values[0]);
 }
 
 string ProcessParser::getProcUpTime(string pid) {
