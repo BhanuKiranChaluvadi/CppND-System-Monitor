@@ -218,6 +218,23 @@ string ProcessParser::getSysKernelVersion() {
 }
 
 int ProcessParser::getNumberOfCores() {
+    string name = "cpu cores";
+    string result = "";
+    // path
+    string path = Path::basePath() +"cpuinfo";
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            result = values[2];            
+            return stoi(result);
+        }
+    }
+    return 0;
 
 }
 
