@@ -47,13 +47,13 @@ public:
 
 // TODO: Define all of the above functions below:
 string ProcessParser::getCmd(string pid) {
-    // TODO: open file and read all the lines.
+    
     string path = Path::basePath() + pid + Path::cmdPath();
     std::ifstream stream;
     Util::getStream(path, stream);
-
-    stream.close();
-
+    string line;
+    getline(stream, line);
+    return line;
 }
 
 vector<string> ProcessParser::getPidList() {
