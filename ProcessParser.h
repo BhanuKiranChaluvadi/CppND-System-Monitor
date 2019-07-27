@@ -85,12 +85,12 @@ vector<string> ProcessParser::getPidList() {
 }
 
 string  ProcessParser::getVmSize(string pid){
-    std::string name = "VmData";
-    std::string vmSize;
+    string name = "VmData";
+    string vmSize;
     float result;
     // get the stream
     string path = Path::basePath() + pid + Path::statusPath();
-    std::ifstream stream;
+    ifstream stream;
     Util::getStream(path, stream);
     string line;
     // read each line 
@@ -98,9 +98,9 @@ string  ProcessParser::getVmSize(string pid){
         // compare if name exsists in first fee spots.
         if (line.compare(0, name.size(), name) == 0) {
             // split the line sting into individua strings
-            std::istringstream iss(line);
-            std::vector<std::string> words(std::istream_iterator<string>{iss}, 
-                                            std::istream_iterator<string>());
+            istringstream iss(line);
+            vector<string> words(istream_iterator<string>{iss}, 
+                                        istream_iterator<string>());
             // DEBUG
             // std::for_each(std::begin(words), std::end(words), [](std::string &word){ std::cout << word<< std::endl;}) ;
             
@@ -109,12 +109,39 @@ string  ProcessParser::getVmSize(string pid){
             break;
         }
     }
-    vmSize = std::to_string(result);
+    vmSize = to_string(result);
     return vmSize;
 }
 
 string ProcessParser::getCpuPercent(string pid) {
+    // path to file
+    string path = Path::basePath() + pid + "/" + Path::statPath();
+    // get file and read line.
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    getline(stream, line);
+    // split the line based on spaces
+    istringstream buf(line);
+    istream_iterator<string> beg(buf), end;
+    vector<string> values(beg, end);
+    // up time
+    float utime = stof(ProcessParser::getProcUpTime(pid));
 
+    float stime = stof(values[14]);
+    float cutime = stof(values[15]);
+    float cstime = stof(values[16]);
+    float starttime = stof(values[21]);
+
+    float uptime = ProcessParser::getSysUpTime();
+    
+    float freq = sysconf(_SC_CLK_TCK);
+
+    float total_time = utime + stime + cutime + cstime; 
+    float seconds = uptime - (starttime/freq);
+    float result = 100.0*((total_time)/seconds);
+
+    return to_string(result);
 }
 
 long int ProcessParser::getSysUpTime() {
