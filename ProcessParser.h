@@ -243,11 +243,64 @@ float ProcessParser::getSysIdleCpuTime(vector<string>values)
 }
 
 float ProcessParser::getSysRamPercent() {
+    string path = Path::basePath() + "/" + Path::memInfoPath();
+    string name1 = "MemAvailable";
+    string name2 = "MemFree";
+    string name3 = "Buffers";
 
+    float totalMem = 0;
+    float freeMem = 0;
+    float buffers = 0;
+
+    // stream data
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (1) {
+
+        }
+        if (line.compare(0, name1.size(), name1) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end); 
+            totalMem = stof(values[1]);
+        }
+        else if (line.compare(0, name2.size(), name2) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            freeMem = stof(values[1]);
+        }
+        else if (line.compare(0, name3.size(), name3) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end); 
+            buffers = stof(values[1]);
+        }
+    }
+    //calculating usage:
+    return float(100.0 * (1-(freeMem/(totalMem-buffers))));
 }
 
 string ProcessParser::getSysKernelVersion() {
-
+    string path = Path::basePath() + "/" + Path::versionPath();
+    string name = "Linux version ";
+    string result = "";
+    // stream data
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            result = values[1];
+            return result;
+        }
+    }
+    return result;
 }
 
 int ProcessParser::getNumberOfCores() {
@@ -271,17 +324,77 @@ int ProcessParser::getNumberOfCores() {
 }
 
 int ProcessParser::getTotalThreads() {
-    
+    vector<string> pidList = ProcessParser::getPidList();
+    float result = 0;
+    for_each(begin(pidList), end(pidList), [&](const string  &pid){
+        string path = Path::basePath() + pid + Path::statusPath();
+        string name = "Threads";
+        ifstream stream;
+        Util::getStream(path, stream);
+        string line;
+        while(getline(stream, line)) {
+            if (line.compare(0, name.size(), name) == 0) {
+                istringstream buf(line);
+                istream_iterator<string> beg(buf), end;
+                vector<string> values(beg, end);
+                result += stof(values[1]);
+                break;          
+            }
+        }
+    });
+    return result;
 }
 int ProcessParser::getTotalNumberOfProcesses() {
-    
+    string path = Path::basePath() + "/" + Path::statPath();
+    string name = "processes";
+    int result = 0;
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            result = stoi(values[1]);
+            return result;
+        }
+    }
+    return result;
 }
 int ProcessParser::getNumberOfRunningProcesses() {
-
+    string path = Path::basePath() + "/" + Path::statPath();
+    string name = "procs_running";
+    int result = 0;
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            result = stoi(values[1]);
+            return result;
+        }
+    }
+    return result;
 }
 
 string ProcessParser::getOSName(){
-
+    string path = "/etc/os-release";
+    string name = "PRETTY_NAME=";
+    string result = "";
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            result = line.substr (name.size());
+            return result;
+        }
+    }
+    return result;
 }
 
 string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2){
