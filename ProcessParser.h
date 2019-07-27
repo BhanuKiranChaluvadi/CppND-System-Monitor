@@ -87,6 +87,7 @@ vector<string> ProcessParser::getPidList() {
 string  ProcessParser::getVmSize(string pid){
     std::string name = "VmData";
     std::string vmSize;
+    float result;
     // get the stream
     string path = Path::basePath() + pid + Path::statusPath();
     std::ifstream stream;
@@ -104,10 +105,11 @@ string  ProcessParser::getVmSize(string pid){
             // std::for_each(std::begin(words), std::end(words), [](std::string &word){ std::cout << word<< std::endl;}) ;
             
             // convertion kB --> GB
-            vmSize = std::to_string(stof(words[1])/float(1024)) ; 
+            result = stof(words[1])/float(1024) ; 
             break;
         }
     }
+    vmSize = std::to_string(result);
     return vmSize;
 }
 
