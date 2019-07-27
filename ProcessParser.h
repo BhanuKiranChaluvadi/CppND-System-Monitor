@@ -206,7 +206,38 @@ string ProcessParser::getProcUser(string pid) {
 
 
 vector<string> ProcessParser::getSysCpuPercent(string coreNumber = "") {
+    string path = Path::basePath() + "/" + Path::statPath();
+    string name = "cpu" + coreNumber;
+    // stream data
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);          
+            return values;
+        }
+    }
+    return (vector<string>());
+}
 
+float get_sys_active_cpu_time(vector<string> values)
+{
+    return (stof(values[S_USER]) +
+            stof(values[S_NICE]) +
+            stof(values[S_SYSTEM]) +
+            stof(values[S_IRQ]) +
+            stof(values[S_SOFTIRQ]) +
+            stof(values[S_STEAL]) +
+            stof(values[S_GUEST]) +
+            stof(values[S_GUEST_NICE]));
+}
+
+float get_sys_idle_cpu_time(vector<string>values)
+{
+    return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 }
 
 float ProcessParser::getSysRamPercent() {
@@ -235,7 +266,6 @@ int ProcessParser::getNumberOfCores() {
         }
     }
     return 0;
-
 }
 
 int ProcessParser::getTotalThreads() {
