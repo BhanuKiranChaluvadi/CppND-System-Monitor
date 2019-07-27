@@ -34,6 +34,8 @@ public:
     static std::string getProcUpTime(string pid);
     static string getProcUser(string pid);
     static vector<string> getSysCpuPercent(string coreNumber = "");
+    static float ProcessParser::getSysActiveCpuTime(vector<string> values);
+    static float ProcessParser::getSysIdleCpuTime(vector<string>values);
     static float getSysRamPercent();
     static string getSysKernelVersion();
     static int getNumberOfCores();
@@ -223,7 +225,7 @@ vector<string> ProcessParser::getSysCpuPercent(string coreNumber = "") {
     return (vector<string>());
 }
 
-float get_sys_active_cpu_time(vector<string> values)
+float ProcessParser::getSysActiveCpuTime(vector<string> values)
 {
     return (stof(values[S_USER]) +
             stof(values[S_NICE]) +
@@ -235,7 +237,7 @@ float get_sys_active_cpu_time(vector<string> values)
             stof(values[S_GUEST_NICE]));
 }
 
-float get_sys_idle_cpu_time(vector<string>values)
+float ProcessParser::getSysIdleCpuTime(vector<string>values)
 {
     return (stof(values[S_IDLE]) + stof(values[S_IOWAIT]));
 }
@@ -283,7 +285,11 @@ string ProcessParser::getOSName(){
 }
 
 string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2){
-
+    float activeTime =  ProcessParser::getSysActiveCpuTime(values2) -  ProcessParser::getSysActiveCpuTime(values1);
+    float idleTime =  ProcessParser::getSysIdleCpuTime(values2) -  ProcessParser::getSysIdleCpuTime(values1);
+    float totalTime = activeTime + idleTime;
+    float result = 100.0*(activeTime / totalTime);
+    return to_string(result);
 }
 
 bool ProcessParser::isPidExisting(string pid){
