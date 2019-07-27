@@ -178,7 +178,33 @@ string ProcessParser::getProcUpTime(string pid) {
 }
 
 string ProcessParser::getProcUser(string pid) {
-
+    string name = "Uid";
+    string result = "";
+    // path
+    string path = Path::basePath() + pid + Path::statusPath();
+    ifstream stream;
+    Util::getStream(path, stream);
+    string line;
+    while(getline(stream, line)) {
+        if (line.compare(0, name.size(), name) == 0) {
+            istringstream buf(line);
+            istream_iterator<string> beg(buf), end;
+            vector<string> values(beg, end);
+            result = values[1];            
+            break;
+        }
+    }
+    stream.close();
+    string user;
+    string users_path = "/etc/passwd" ;
+    Util::getStream(users_path, stream);
+    while(getline(stream, line)) {
+        if (line.find(result) != std::string::npos) {
+            user = line.substr(0, line.find(":"));
+            return user;
+        }   
+    }
+    return "";
 }
 
 
