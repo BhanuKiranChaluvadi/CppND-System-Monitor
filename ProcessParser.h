@@ -47,7 +47,6 @@ public:
     static bool isPidExisting(string pid);
 };
 
-// TODO: Define all of the above functions below:
 string ProcessParser::getCmd(string pid) {
     
     string path = Path::basePath() + pid + Path::cmdPath();
