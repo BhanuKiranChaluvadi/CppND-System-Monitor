@@ -257,9 +257,8 @@ float ProcessParser::getSysRamPercent() {
     Util::getStream(path, stream);
     string line;
     while(getline(stream, line)) {
-        if (1) {
-
-        }
+        if (totalMem != 0 && freeMem != 0)
+            break;
         if (line.compare(0, name1.size(), name1) == 0) {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
@@ -296,7 +295,7 @@ string ProcessParser::getSysKernelVersion() {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
-            result = values[1];
+            result = values[2];
             return result;
         }
     }
@@ -325,10 +324,10 @@ int ProcessParser::getNumberOfCores() {
 
 int ProcessParser::getTotalThreads() {
     vector<string> pidList = ProcessParser::getPidList();
-    float result = 0;
-    for_each(begin(pidList), end(pidList), [&](const string  &pid){
+    string name = "Threads";
+    int result = 0;
+    for_each(begin(pidList), end(pidList), [&result, name](const string  &pid){
         string path = Path::basePath() + pid + Path::statusPath();
-        string name = "Threads";
         ifstream stream;
         Util::getStream(path, stream);
         string line;
@@ -337,7 +336,7 @@ int ProcessParser::getTotalThreads() {
                 istringstream buf(line);
                 istream_iterator<string> beg(buf), end;
                 vector<string> values(beg, end);
-                result += stof(values[1]);
+                result += stoi(values[1]);
                 break;          
             }
         }
@@ -374,8 +373,8 @@ int ProcessParser::getNumberOfRunningProcesses() {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
-            result = stoi(values[1]);
-            return result;
+            result += stoi(values[1]);
+            break;
         }
     }
     return result;
@@ -390,11 +389,13 @@ string ProcessParser::getOSName(){
     string line;
     while(getline(stream, line)) {
         if (line.compare(0, name.size(), name) == 0) {
-            result = line.substr (name.size());
+            // remove quotes
+            result = line.substr (name.size()+1);
+            result.erase(std::remove(begin(result), end(result), '"'), result.end());
             return result;
         }
     }
-    return result;
+    return "";
 }
 
 string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vector<std::string>values2){
