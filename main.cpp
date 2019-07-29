@@ -7,7 +7,7 @@
 #include <time.h>
 #include <sstream>
 #include <iomanip>
-#include "util.h"
+// #include "util.h"
 #include "SysInfo.h"
 #include "ProcessContainer.h"
 
@@ -74,30 +74,30 @@ void printMain(SysInfo sys,ProcessContainer procs){
     init_pair(2,COLOR_GREEN,COLOR_BLACK);
     int counter = 0;
     while(1){
-    box(sys_win,0,0);
-    box (proc_win,0,0);
-    procs.refreshList();
-    std::vector<std::vector<std::string>> processes = procs.getList();
-    writeSysInfoToConsole(sys,sys_win);
-    getProcessListToConsole(processes[counter],proc_win);
-    wrefresh(sys_win);
-    wrefresh(proc_win);
-    refresh();
-    sleep(1);
-    if(counter ==  (processes.size() -1)){
-        counter = 0;
-    }
-    else {
-        counter ++;
-    }
+        box(sys_win,0,0);
+        box (proc_win,0,0);
+        procs.refreshList();
+        std::vector<std::vector<std::string>> processes = procs.getList();
+        writeSysInfoToConsole(sys,sys_win);
+        getProcessListToConsole(processes[counter],proc_win);
+        wrefresh(sys_win);
+        wrefresh(proc_win);
+        refresh();
+        sleep(1);
+        if(counter ==  (processes.size() -1)){
+            counter = 0;
+        }
+        else {
+            counter ++;
+        }
     }
 	endwin();
 }
 int main( int   argc, char *argv[] )
 {
- //Object which contains list of current processes, Container for Process Class
+    //Object which contains list of current processes, Container for Process Class
     ProcessContainer procs;
-// Object which containts relevant methods and attributes regarding system details
+    // Object which containts relevant methods and attributes regarding system details
     SysInfo sys;
     //std::string s = writeToConsole(sys);
     printMain(sys,procs);

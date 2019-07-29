@@ -1,3 +1,5 @@
+#pragma once
+
 #include <algorithm>
 #include <iostream>
 #include <math.h>
@@ -34,8 +36,8 @@ public:
     static std::string getProcUpTime(string pid);
     static string getProcUser(string pid);
     static vector<string> getSysCpuPercent(string coreNumber = "");
-    static float ProcessParser::getSysActiveCpuTime(vector<string> values);
-    static float ProcessParser::getSysIdleCpuTime(vector<string>values);
+    static float getSysActiveCpuTime(vector<string> values);
+    static float getSysIdleCpuTime(vector<string>values);
     static float getSysRamPercent();
     static string getSysKernelVersion();
     static int getNumberOfCores();
@@ -206,7 +208,7 @@ string ProcessParser::getProcUser(string pid) {
 }
 
 
-vector<string> ProcessParser::getSysCpuPercent(string coreNumber = "") {
+vector<string> ProcessParser::getSysCpuPercent(string coreNumber) {
     string path = Path::basePath() + "/" + Path::statPath();
     string name = "cpu" + coreNumber;
     // stream data
@@ -314,7 +316,7 @@ int ProcessParser::getNumberOfCores() {
             istringstream buf(line);
             istream_iterator<string> beg(buf), end;
             vector<string> values(beg, end);
-            result = values[2];            
+            result = values[3];
             return stoi(result);
         }
     }
