@@ -48,26 +48,26 @@ string Process::getUser() const {
 string Process::getCmd() const {
     return this->cmd;
 }
-int Process::getCpu() const {
-    // TODO: convert string to int - this->cpu;
-    return 0;
+int Process::getCpu() const {  
+    return stoi(this->cpu);
 }
 int Process::getMem() const {
-    // TODO: convert string to int - this->mem;
-    return 0;
+    return stoi(this->mem);
 }
 string Process::getUpTime() const {
     return this->upTime;
 }
 
 string Process::getProcess(){
-    if(!ProcessParser::isPidExisting(this->pid))
+    if(!ProcessParser::isPidExisting(this->pid)) {
         return "";
+    }
+        
     this->mem = ProcessParser::getVmSize(this->pid);
     this->upTime = ProcessParser::getProcUpTime(this->pid);
     this->cpu = ProcessParser::getCpuPercent(this->pid);
 
-    return (this->pid 
+    string value = this->pid 
                 + "   " 
                 + this->user 
                 + "   "
@@ -78,5 +78,7 @@ string Process::getProcess(){
                 + this->upTime.substr(0,5) 
                 + "   "
                 + this->cmd.substr(0, 30)
-                + "...");
+                + "...";
+
+    return value;
 }

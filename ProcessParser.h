@@ -18,6 +18,7 @@
 #include <dirent.h>     // basics- directory access - opendir(), readdir(), closedir()
 #include <time.h>
 #include <unistd.h>     // unix standard header - threads
+#include <sys/stat.h>
 #include "constants.h"
 #include "util.h"
 
@@ -60,7 +61,6 @@ string ProcessParser::getCmd(string pid) {
 }
 
 vector<string> ProcessParser::getPidList() {
-    // TODO: fiter non pid file in the proc folder.
     vector <string> pidList;
     DIR *pdir = nullptr;
     pdir = opendir(Path::basePath().c_str());
@@ -75,12 +75,15 @@ vector<string> ProcessParser::getPidList() {
             continue;
         // is every character of a name is digit ?
         if(all_of(dirp->d_name, dirp->d_name + std::strlen(dirp->d_name), [](const char& c){return isdigit(c);}))
-            pidList.push_back(dirp->d_name );  
+            pidList.push_back(dirp->d_name ); 
     }
 
     // finally, let's close the directory
+
     if(closedir(pdir))
         throw std::runtime_error(std::strerror(errno));
+    // for_each(begin(pidList), end(pidList), [](const string& pid){cout << pid << endl;});
+
     return pidList;
 }
 
@@ -408,5 +411,7 @@ string ProcessParser::PrintCpuStats(std::vector<std::string> values1, std::vecto
 }
 
 bool ProcessParser::isPidExisting(string pid){
-
+    string path = Path::basePath() + pid;
+    struct stat buffer;
+    return (stat (path.c_str(), &buffer) == 0);
 }
