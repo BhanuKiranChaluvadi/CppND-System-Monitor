@@ -71,9 +71,9 @@ string Process::getProcess(){
                 + "   " 
                 + this->user 
                 + "   "
-                + this->mem.substr(0, 5) 
+                + this->cpu.substr(0, 5) 
                 + "   "
-                + this->cpu.substr(0,5) 
+                + this->mem.substr(0,5) 
                 + "   "
                 + this->upTime.substr(0,5) 
                 + "   "
@@ -82,3 +82,4 @@ string Process::getProcess(){
 
     return value;
 }
+s
