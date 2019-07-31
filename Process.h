@@ -82,4 +82,3 @@ string Process::getProcess(){
 
     return value;
 }
-s
